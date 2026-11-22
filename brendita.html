@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Para mi Brendita 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#ffe3ec;--bg2:#ffc2d6;--ink:#7a1f43;--soft:#b5486f;--card:rgba(255,255,255,.72);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#2a0f1c;--bg2:#4a1630;--ink:#ffd6e5;--soft:#ff9bbd;--card:rgba(255,255,255,.09)}}
+:root[data-theme="dark"]{--bg1:#2a0f1c;--bg2:#4a1630;--ink:#ffd6e5;--soft:#ff9bbd;--card:rgba(255,255,255,.09)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);font-family:'Quicksand',system-ui,sans-serif;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.wrap{width:100%;max-width:460px;padding:24px;text-align:center;position:relative;z-index:2}
+.emoji{font-size:3.4rem;animation:beat 1.4s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.card{background:var(--card);backdrop-filter:blur(8px);border-radius:26px;padding:34px 22px;min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;box-shadow:0 10px 40px rgba(181,72,111,.25);transition:opacity .45s,transform .45s}
+.card.out{opacity:0;transform:translateY(-14px) scale(.97)}
+.card.in{animation:pop .6s ease}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+.txt{font-size:1.35rem;line-height:1.5;margin:0}
+.script{font-family:'Dancing Script',cursive,serif;font-size:2.4rem;color:var(--soft);margin:0}
+.btns{margin-top:22px;display:flex;gap:14px;justify-content:center;min-height:52px;position:relative}
+button{border:0;border-radius:999px;padding:14px 30px;font:600 1.05rem 'Quicksand',sans-serif;background:var(--soft);color:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(181,72,111,.35);transition:transform .15s}
+button:active{transform:scale(.94)}
+button.alt{background:transparent;color:var(--soft);box-shadow:inset 0 0 0 2px var(--soft)}
+.dots{margin-top:20px;display:flex;gap:7px;justify-content:center}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--soft);opacity:.3;transition:.3s}
+.dots i.on{opacity:1;transform:scale(1.4)}
+.heart{position:fixed;bottom:-40px;z-index:1;pointer-events:none;animation:up linear forwards}
+@keyframes up{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="emoji" id="em">💌</div>
+  <div class="card in" id="card"></div>
+  <div class="btns" id="btns"></div>
+  <div class="dots" id="dots"></div>
+</div>
+<script>
+var steps=[
+ {e:'💌',t:'Hola, Brendita…',s:'Tengo algo para ti. Ve despacito, ¿sí?'},
+ {e:'🥺',t:'Me gustas mucho, ¿sabes?'},
+ {e:'☀️',t:'Contigo todo se siente más bonito.'},
+ {e:'😊',t:'Estoy feliz contigo.'},
+ {e:'🌸',t:'Me haces sonreír hasta cuando no me doy cuenta.'},
+ {e:'💖',t:'Estoy enamorado de ti.'},
+ {e:'✨',big:'Mi Brendita linda'},
+ {e:'🫶',t:'¿Me das la oportunidad de seguir haciéndote feliz?',end:true}
+];
+var i=0,card=document.getElementById('card'),btns=document.getElementById('btns'),dots=document.getElementById('dots'),em=document.getElementById('em');
+steps.forEach(function(){dots.appendChild(document.createElement('i'))});
+function heart(e){var h=document.createElement('div');h.className='heart';h.textContent=e||['💖','💗','💕','🌸'][Math.floor(Math.random()*4)];h.style.left=Math.random()*95+'vw';h.style.fontSize=(16+Math.random()*26)+'px';h.style.animationDuration=(4+Math.random()*4)+'s';document.body.appendChild(h);setTimeout(function(){h.remove()},8500)}
+function burst(n){for(var k=0;k<n;k++)setTimeout(heart,k*60)}
+function show(){
+  var s=steps[i];em.textContent=s.e;
+  card.className='card';void card.offsetWidth;card.className='card in';
+  card.innerHTML=(s.big?'<p class="script">'+s.big+'</p>':'<p class="txt">'+s.t+'</p>')+(s.s?'<p class="txt" style="font-size:1rem;opacity:.8">'+s.s+'</p>':'');
+  [].forEach.call(dots.children,function(d,k){d.className=k===i?'on':''});
+  btns.innerHTML='';
+  if(s.end){
+    var y=document.createElement('button');y.textContent='Sí 💗';y.onclick=yes;
+    var n=document.createElement('button');n.textContent='Déjame pensar';n.className='alt';
+    n.onmouseenter=n.ontouchstart=function(e){e.preventDefault();n.style.transform='translate('+(Math.random()*160-80)+'px,'+(Math.random()*80-40)+'px)'};
+    n.style.transition='transform .25s';btns.appendChild(y);btns.appendChild(n);
+  }else{
+    var b=document.createElement('button');b.textContent='Siguiente 💕';b.onclick=next;btns.appendChild(b);
+  }
+  if(i>=5)burst(10);
+}
+function next(){card.className='card out';setTimeout(function(){i++;show()},400)}
+function yes(){
+  burst(60);em.textContent='🥰';
+  card.className='card in';
+  card.innerHTML='<p class="script">¡Gracias, mi Brendita!</p><p class="txt">Acabas de hacerme el chico más feliz del mundo 💖</p>';
+  btns.innerHTML='';dots.style.display='none';
+  setInterval(function(){heart()},250);
+}
+setInterval(heart,900);
+show();
+</script>
+</body>
+</html>
